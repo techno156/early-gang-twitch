@@ -3,7 +3,6 @@ import time
 from libraries import chatPlays
 from libraries.autoStream import *
 import random
-import aiohttp
 
 # reading config
 config = configparser.ConfigParser()
@@ -500,10 +499,10 @@ async def mashB(pressTime):
         await asyncio.sleep(.3)
 
 async def select(pressTime):
-    await chatPlays.holdAndReleaseKey(chatPlays.keyCodes.get("TWO"), pressTime)
+    await chatPlays.holdAndReleaseKey(chatPlays.keyCodes.get("P"), pressTime)
 
 async def start(pressTime):
-    await chatPlays.holdAndReleaseKey(chatPlays.keyCodes.get("ONE"), pressTime)
+    await chatPlays.holdAndReleaseKey(chatPlays.keyCodes.get("U"), pressTime)
 
 async def wander(times, holdTime):
     for i in range(times):

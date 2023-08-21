@@ -4,7 +4,6 @@ import time
 from controllers import gbaController
 from libraries import chatPlays
 from libraries.autoStream import *
-import aiohttp
 
 # reading config
 config = configparser.ConfigParser()
