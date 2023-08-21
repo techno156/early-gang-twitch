@@ -16,7 +16,7 @@ if os.path.exists(os.path.abspath(os.path.join("files"))):
     directory = os.path.abspath(os.path.join("files"))
 else:
     for root, dirs, files in os.walk("\\"):
-        if "early-gang-main\\files\\config.ini" in os.path.abspath(os.path.join(root, "config.ini")):
+        if "early-gang-twitch-main\\files\\config.ini" in os.path.abspath(os.path.join(root, "config.ini")):
             directory = os.path.abspath(os.path.join(root))
 
 # printing on ready statement
