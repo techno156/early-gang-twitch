@@ -105,7 +105,7 @@ class Bot(commands.Bot):
     # sends link to discord
     @commands.command()
     async def discord(self, ctx: commands.Context):
-        await ctx.send("[bot] https://discord.gg/eYSUuqNUvb")
+        await ctx.send("[bot] https://discord.gg/cnrvMKfacy")
 
     # sends link to tiltify page
     @commands.command()
