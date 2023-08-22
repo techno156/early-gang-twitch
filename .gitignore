@@ -1,4 +1,4 @@
 files/config.ini
-files/chatData.template.db
+files/chatData.db
 .idea
 scratch.py
