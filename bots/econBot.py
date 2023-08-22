@@ -22,7 +22,7 @@ class Bot(commands.Bot):
         super().__init__(token = accessToken, prefix = "!", initial_channels = [yourChannelName])
 
     # makes the bot shut the hell up about commands not existing
-    async def event_command_error(self, ctx, error):
+    async def event_command_error(self, error):
         if isinstance(error, commands.CommandNotFound):
             pass
         else:
@@ -33,7 +33,7 @@ class Bot(commands.Bot):
         await self.updateWatchTime()
 
     # whenever a user joins write their id and entry time into an array and add their id to the database if not there
-    async def event_join(self, channel, user):
+    async def event_join(self, user):
         global chatters
 
         # adds chatter id, watch time start, and uptime start

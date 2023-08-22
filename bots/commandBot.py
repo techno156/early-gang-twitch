@@ -4,7 +4,6 @@
 
 # imports
 from urllib.parse import urlencode
-import aiosqlite
 from twitchio.ext import commands
 import base64
 from libraries.chatPlays import *
@@ -51,7 +50,7 @@ class Bot(commands.Bot):
         super().__init__(token = accessToken, prefix="!", initial_channels = [yourChannelName])
 
     # makes the bot shut the hell up about commands not existing
-    async def event_command_error(self, ctx, error):
+    async def event_command_error(self, error):
         if isinstance(error, commands.CommandNotFound):
             pass
         else:
