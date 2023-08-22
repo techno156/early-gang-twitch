@@ -145,7 +145,7 @@ async def tts():
                         donationData = donationData.get("data")
                         connected = True
                     except:
-                        print("FUCK COULDN'T GET DONATIONS\n" + donationData)
+                        print("\033[91mTILTIFY FUCKED UP\033[0m")
                         await asyncio.sleep(5)
 
                 # giving tts data to obs

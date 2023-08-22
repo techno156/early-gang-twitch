@@ -42,7 +42,7 @@ else:
 
 # printing on ready statement
 if directory == "":
-    print("\033[1K:\033[31m\rcouldn't find directory\033[0m")
+    print("\033[1K:\033[31m\rAAAA FUCK THERE'S NO FILES FOLDER AAAAAAAAAAAAAAAAA\033[0m")
 else:
     print("\033[1K:\033[36m\rfuck it we ball\033[0m")
 
@@ -68,7 +68,7 @@ async def isLive(channelName):
                             data = await streamResponse.json()
                             return True if data["data"] else False
                         else:
-                            print("error checking if channel is live" + await streamResponse.json())
+                            print("\033[91mTWITCH FUCKED UP\033[0m" )
                             return None
                 # trying again
                 else:
@@ -98,7 +98,7 @@ async def getBroadcasterId(channelName):
 
                     # error handling
                     else:
-                        print("error getting id " + await response.json())
+                        print("\033[91mTWITCH FUCKED UP\033[0m")
 
                 # more error handling
                 else:
@@ -120,7 +120,7 @@ async def raid(raiderChannelName, raideeChannelName):
                     if await getBroadcasterId(raiderChannelName) and await getBroadcasterId(raideeChannelName):
                         async with session.post("https://api.twitch.tv/helix/raids", headers={"Authorization": "Bearer " + accessToken, "Client-Id": clientID}, params={"from_broadcaster_id": await getBroadcasterId(raiderChannelName), "to_broadcaster_id": await getBroadcasterId(raideeChannelName)}) as raid_response:
                             if raid_response.status != 200:
-                                print("twitch fucked up")
+                                print("\033[91mTWITCH FUCKED UP\033[0m")
 
                     # trying again
                     else:

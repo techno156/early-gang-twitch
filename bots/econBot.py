@@ -52,7 +52,7 @@ class Bot(commands.Bot):
                             await db.execute("INSERT INTO economy (id, watchtime, points) VALUES (?, ?, ?)", (await getBroadcasterId(user.name), 0, 0,))
                             await db.commit()
             except:
-                print("FUCK THERE'S A DOUBLE ID")
+                print("\033[91mFUCK THERE'S A DOUBLE ID\033[0m")
 
     # whenever a user leaves add their remaining time to the csv and remove them from the array
     async def event_part(self, user):

@@ -41,7 +41,7 @@ if spotifyRefreshToken == "":
             with open(os.path.abspath((os.path.join(directory, "config.ini"))), "w") as file:
                 file.writelines(lines)
     else:
-        print("problem getting tokens " + response.json())
+        print("\033[91mSPOTIFY FUCKED UP\033[0m")
 
 class Bot(commands.Bot):
 
@@ -127,7 +127,7 @@ class Bot(commands.Bot):
                 if "access_token" in data:
                     accessToken = data["access_token"]
                 else:
-                    print("error refreshing token: " + data)
+                    print("\033[91mSPOTIFY FUCKED UP\033[0m")
                     accessToken = None
 
             # get song
