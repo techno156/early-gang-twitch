@@ -15,7 +15,9 @@
 
 ### part II - setting up the script
 - download the .zip
-- unzip the folder and open config.ini in a text editor
+- rename "chatData.template.db" to "config.ini"
+- unzip the folder and open "config.template.ini" in a text editor
+- rename it to "config.ini"
 - fill in each line for each section you plan on using
 - if you're using chatPlays.py be sure to change the controller to fit whatever game you're using it for
 - once you have the config set up can run the script

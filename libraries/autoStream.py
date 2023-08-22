@@ -3,27 +3,48 @@
 # imports
 import configparser
 import os
+import time
+
 import aiohttp
-import pyautogui
 import asyncio
 
 # setting up variables
 whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "fratriarch", "jaytsoul", "purpledalek", "ramcicle"]
 
-# finding directory
+# setting directory if file is ran correctly
 directory = ""
 if os.path.exists(os.path.abspath(os.path.join("files"))):
     directory = os.path.abspath(os.path.join("files"))
+
+# finding the file because im too fucking lazy to teach people how to use the terminal plus BLOCK OF TEXT SCARY AAAAAAAAAAAH
 else:
+
+    # setting up loading message
+    dotCount = 0
+    lastUpdate = time.time()
+    print("\033[1K\rloading", end = "", flush = True)
+
+    # checking file by file
     for root, dirs, files in os.walk("\\"):
+
+        # creating loading message
+        if time.time() - lastUpdate > .5:
+            if dotCount != 0:
+                print(".", end="", flush=True)
+            else:
+                print("\033[1K\rloading", end = "", flush = True)
+            dotCount = 0 if dotCount == 3 else dotCount + 1
+            lastUpdate = time.time()
+
+        # checking if file matches
         if "early-gang-twitch-main\\files\\config.ini" in os.path.abspath(os.path.join(root, "config.ini")):
             directory = os.path.abspath(os.path.join(root))
 
 # printing on ready statement
 if directory == "":
-    print("\033[31mcouldn't find directory\033[0m")
+    print("\033[1K:\033[31m\rcouldn't find directory\033[0m")
 else:
-    print("we do be early tho")
+    print("\033[1K:\033[36m\rfuck it we ball\033[0m")
 
 # reading config
 config = configparser.ConfigParser()
@@ -45,10 +66,7 @@ async def isLive(channelName):
                     async with session.get("https://api.twitch.tv/helix/streams?user_login=" + channelName) as streamResponse:
                         if streamResponse.status == 200:
                             data = await streamResponse.json()
-                            if data["data"]:
-                                return True
-                            else:
-                                return False
+                            return True if data["data"] else False
                         else:
                             print("error checking if channel is live" + await streamResponse.json())
                             return None
