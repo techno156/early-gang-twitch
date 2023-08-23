@@ -4,7 +4,6 @@
 
 # imports
 from urllib.parse import urlencode
-import aiosqlite
 from twitchio.ext import commands
 import base64
 from libraries.chatPlays import *
@@ -42,7 +41,7 @@ if spotifyRefreshToken == "":
             with open(os.path.abspath((os.path.join(directory, "config.ini"))), "w") as file:
                 file.writelines(lines)
     else:
-        print("problem getting tokens " + response.json())
+        print("\033[91mSPOTIFY FUCKED UP\033[0m")
 
 class Bot(commands.Bot):
 
@@ -51,7 +50,7 @@ class Bot(commands.Bot):
         super().__init__(token = accessToken, prefix="!", initial_channels = [yourChannelName])
 
     # makes the bot shut the hell up about commands not existing
-    async def event_command_error(self, ctx, error):
+    async def event_command_error(self, error):
         if isinstance(error, commands.CommandNotFound):
             pass
         else:
@@ -128,7 +127,7 @@ class Bot(commands.Bot):
                 if "access_token" in data:
                     accessToken = data["access_token"]
                 else:
-                    print("error refreshing token: " + data)
+                    print("\033[91mSPOTIFY FUCKED UP\033[0m")
                     accessToken = None
 
             # get song
