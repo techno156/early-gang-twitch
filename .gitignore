@@ -2,3 +2,4 @@ files/config.ini
 files/chatData.db
 .idea
 scratch.py
+.DS_Store

@@ -95,11 +95,11 @@ class Bot(commands.Bot):
     # sends a list of commands
     @commands.command()
     async def menu(self, ctx: commands.Context):
-        await ctx.send("[bot] !what, !bots, !song, !controls, !vote, !poll, !discord, !watchtime, !bp, !donate, !playlist, !bpShop, !snackFamily")
+        await ctx.send("[bot] !what, !bots, !song, !controls, !vote, !poll, !discord, !watchtime, !bp, !donate, !playlist, !bpshop, !snackfamily")
 
     # sends a list of sll the different input bots
     @commands.command()
-    async def snackFamily(self, ctx: commands.Context):
+    async def snackfamily(self, ctx: commands.Context):
         await ctx.send("[bot] sleepy, chris, burst, silly, cautious, sonic")
 
     # sends link to discord
