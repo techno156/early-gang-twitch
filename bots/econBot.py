@@ -221,7 +221,7 @@ class Bot(commands.Bot):
 
     # lets users give their points to each other
     @commands.command()
-    async def givebp(self, ctx: commands.Context):
+    async def giveBp(self, ctx: commands.Context):
 
         # checks if it's a whitelister so that they can print money
         if ctx.author.name in whiteListers:
@@ -297,7 +297,7 @@ class Bot(commands.Bot):
 
     # lets whitelisters take points
     @commands.command()
-    async def bptax(self, ctx: commands.Context):
+    async def bpTax(self, ctx: commands.Context):
 
         # checks if the chatter can do this
         if ctx.author.name in whiteListers:
@@ -328,8 +328,8 @@ class Bot(commands.Bot):
 
     # lists commands available for purchase
     @commands.command()
-    async def bpshop(self, ctx: commands.Context):
-        await ctx.send("[bot] !shoot (1000), !shootsnack (800), !swapsnack (150), !healsnack (500)")
+    async def bpShop(self, ctx: commands.Context):
+        await ctx.send("[bot] !shoot (1000), !shootSnack (800), !swapSnack (150), !healSnack (500)")
 
     # times out user
     @commands.command()
@@ -563,7 +563,7 @@ class Bot(commands.Bot):
 
     # disables input bot for 35 to 95 minutes
     @commands.command()
-    async def shootsnack(self, ctx: commands.Context):
+    async def shootSnack(self, ctx: commands.Context):
 
         # thread to wait to restart input bot
         async def snackWait():
@@ -614,7 +614,7 @@ class Bot(commands.Bot):
 
     # reactivates input bot
     @commands.command()
-    async def healsnack(self, ctx: commands.Context):
+    async def healSnack(self, ctx: commands.Context):
 
         async with aiosqlite.connect(os.path.abspath((os.path.join(directory, "chatData.db")))) as db:
             async with db.execute("SELECT * FROM economy WHERE id=?", (await getBroadcasterId(ctx.author.name),)) as cursor:
@@ -650,7 +650,7 @@ class Bot(commands.Bot):
 
     # changes input bot type
     @commands.command()
-    async def swapsnack(self, ctx: commands.Context):
+    async def swapSnack(self, ctx: commands.Context):
 
         # finding user id in database
         async with aiosqlite.connect(os.path.abspath(os.path.join(directory, "chatData.db"))) as db:

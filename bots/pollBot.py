@@ -53,7 +53,7 @@ class Bot(commands.Bot):
 
     # allows a whitelisted user to start a pole
     @commands.command()
-    async def startpoll(self, ctx):
+    async def startPoll(self, ctx):
         global pollOptions
         global voters
         global pollName
@@ -147,7 +147,7 @@ class Bot(commands.Bot):
 
     # allows a whitelisted user to stop the poll
     @commands.command()
-    async def endpoll(self, ctx):
+    async def endPoll(self, ctx):
         global runningPoll
         global pollOptions
         global voters
