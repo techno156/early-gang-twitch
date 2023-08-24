@@ -9,7 +9,7 @@ import aiohttp
 import asyncio
 
 # setting up variables
-whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "fratriarch", "jaytsoul", "purpledalek", "ramcicle"]
+whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle"]
 
 # setting directory if file is ran correctly
 directory = ""
