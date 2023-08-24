@@ -135,8 +135,8 @@ class Bot(commands.Bot):
                 async with session.get("https://api.spotify.com/v1/me/player/currently-playing", headers = {"Authorization": "Bearer " + accessToken}) as response:
                     if response.status == 200:
                         data = await response.json()
-                        if data['is_playing']:
-                            await ctx.send(f"[bot] {data['item']['name']} by {data['item']['artists'][0]['name']}")
+                        if data["is_playing"]:
+                            await ctx.send("[bot] " + data["item"]["name"] + " by " + data["item"]["artists"][0]["name"])
                         else:
                             await ctx.send("[bot] no song playing")
                     else:
