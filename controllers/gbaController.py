@@ -371,7 +371,6 @@ async def controller(message):
                 await holdA(holdTime)
             elif "mash b" in message:
                 await mashA(pressTime)
-                await x(pressTime)
             elif "select" in message:
                 await start(pressTime)
             elif "start" in message:
