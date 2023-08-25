@@ -4,13 +4,14 @@ from libraries import chatPlays
 from bots.commandBot import *
 import random
 import asyncio
+timeSinceLastMessage = time.time()
 
 # makes inputs when no one has typed in chat for a while
 async def idleBot():
 
     # checks if idle bot is supposed to be on and if no one has chatted
     while chatPlays.idleBotPlaying:
-        if chatPlays.timeSinceLastMessage <= (time.time() - 5 * 60):
+        if timeSinceLastMessage <= (time.time() - 5 * 60):
             botPressTime = (random.randint(1, 12) / 10)
             botHoldTime = (random.randint(1, 100) / 10)
 
@@ -289,6 +290,8 @@ async def controller(message):
 
     # makes sure chat is playing
     if chatPlays.chatPlaying is True:
+        global timeSinceLastMessage
+        timeSinceLastMessage = time.time()
 
         # setting up variables
         pressTime = (random.randint(1, 3) / 10)

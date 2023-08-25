@@ -4,17 +4,19 @@
 
 # imports
 from urllib.parse import urlencode
+import aiohttp
 from twitchio.ext import commands
 import base64
 import requests
 import configparser
 import os
 import time
+import asyncio
+from controllers.gbaController import *
 
 # setting up variables
 whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle"]
 chatters = []
-timeSinceLastWelcome = time.time()
 
 # setting directory if file is ran correctly
 directory = ""
@@ -101,7 +103,6 @@ class Bot(commands.Bot):
     # when someone sends a message in chat
     async def event_message(self, message):
         global chatters
-        global timeSinceLastWelcome
 
         # don't take bot messages as real messages
         if message.echo:
@@ -109,7 +110,6 @@ class Bot(commands.Bot):
 
         # making controller input
         await asyncio.create_task(controller(message.content))
-        chatPlays.timeSinceLastMessage = time.time()
         await self.handle_commands(message)
 
     # sends list of chat plays controls

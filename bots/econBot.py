@@ -35,7 +35,7 @@ class Bot(commands.Bot):
         await self.updateWatchTime()
 
     # whenever a user joins write their id and entry time into an array and add their id to the database if not there
-    async def event_join(channel, user):
+    async def event_join(self, user):
         global chatters
 
         # adds chatter id, watch time start, and uptime start

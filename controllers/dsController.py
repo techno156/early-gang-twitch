@@ -4,13 +4,17 @@ import time
 import asyncio
 from controllers import gbaController
 from libraries import chatPlays
+timeSinceLastMessage = time.time()
 
 # makes inputs when no one has typed in chat for a while
 async def idleBot():
     
     # checks if idle bot is supposed to be on and if no one has chatted
     while chatPlays.idleBotPlaying:
-        if chatPlays.timeSinceLastMessage <= (time.time() - 5 * 60):
+        global timeSinceLastMessage
+        timeSinceLastMessage = time.time()
+        
+        if timeSinceLastMessage <= (time.time() - 5 * 60):
             botPressTime = (random.randint(1, 12) / 10)
             botHoldTime = (random.randint(1, 100) / 10)
 

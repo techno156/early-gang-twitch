@@ -7,9 +7,6 @@ import pynput
 import aiofile
 from bots.commandBot import *
 
-# change controller here
-from controllers.gbaController import *
-
 # setting up variables
 chatPlaying = False
 inputBotPlaying = False
