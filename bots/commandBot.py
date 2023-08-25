@@ -13,6 +13,8 @@ import os
 import time
 import asyncio
 from controllers.gbaController import *
+from obswebsocket import requests as obwsrequests
+from libraries import charityDonoTTS
 
 # setting up variables
 whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle"]
@@ -156,6 +158,27 @@ class Bot(commands.Bot):
     @commands.command()
     async def playlist(self, ctx: commands.Context):
         await ctx.send("[bot] https://open.spotify.com/playlist/2zBtOh6PAFBGCnlA7oSsEm?si=4a576dfd1c534357")
+
+    # allows mods to start stream
+    @commands.command()
+    async def startstream(self, ctx: commands.Context):
+        if ctx.author.name in whiteListers:
+             charityDonoTTS.ws.call(obwsrequests.StartStreaming())
+    
+    # allows mods to stop stream
+    @commands.command()
+    async def stopstream(self, ctx: commands.Context):
+        if ctx.author.name in whiteListers:
+            charityDonoTTS.ws.call(obwsrequests.StopStreaming())
+    
+    # allows mods to raid
+    @commands.command()
+    async def raid(self, ctx: commands.Context):
+        if ctx.author.name in whiteListers:
+            ctx.message.content = ctx.message.content.replace("!raid ", "")
+            users = await bot.fetch_users([yourChannelName, ctx.message.content])
+            print(users)
+            await users[0].start_raid(accessToken, users[1].id)
 
     # sends a message with the currently playing song
     @commands.command()

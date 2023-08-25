@@ -33,7 +33,7 @@ screenWidth, screenHeight = pyautogui.size()
 # making token and writing to file if needed
 if refreshToken == "":
     response = requests.post("https://v5api.tiltify.com/oauth/token", data = {"grant_type": "authorization_code", "client_id": clientID, "client_secret": clientSecret, "redirect_uri": "https://localhost/", "code": code})
-    with open(os.path.abspath((os.path.join(bots.commandBot.directory, "config.ini"))), "r") as file:
+    with open(os.path.abspath((os.path.join(directory, "config.ini"))), "r") as file:
         lines = file.readlines()
     for i, line in enumerate(lines):
         if line.startswith("tiltify refresh token ="):
