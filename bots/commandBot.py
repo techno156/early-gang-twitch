@@ -49,7 +49,7 @@ else:
 
 # printing on ready statement
 if directory == "":
-    print("\033[1K:\033[31m\rAAAA FUCK THERE'S NO FILES FOLDER AAAAAAAAAAAAAAAAA\033[0m")
+    print("\033[1K:\033[31m\rfuck it\033[0m")
 else:
     print("\033[1K:\033[36m\rfuck it we ball\033[0m")
 
