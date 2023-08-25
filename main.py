@@ -10,7 +10,7 @@ async def main():
 
     # setting up
     ws.connect()
-    await chatPlays.updateSnatus()
+    await updateSnatus()
 
     # so you don't have to restart stream
     if await bot.fetch_streams(user_logins=[streamerChannelName]) != []:

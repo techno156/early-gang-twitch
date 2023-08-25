@@ -58,7 +58,7 @@ async def autoSave():
 async def startAutoSave():
 	global autoSaving
 	autoSaving = True
-	asyncio.create_task(controllers.gbaController.autoSave())
+	asyncio.create_task(autoSave())
 
 # stops autosaving
 async def stopAutoSave():
