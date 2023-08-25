@@ -35,7 +35,7 @@ class Bot(commands.Bot):
         await self.updateWatchTime()
 
     # whenever a user joins write their id and entry time into an array and add their id to the database if not there
-    async def event_join(channel, user):
+    async def event_join(self, channel, user):
         global chatters
 
         # adds chatter id, watch time start, and uptime start
@@ -591,7 +591,7 @@ class Bot(commands.Bot):
             await asyncio.sleep(10)
 
             # when channel goes live reset uptime and !first
-            if await bot.fetch_streams(user_logins = [yourChannelName]) != []:
+            if await commandBot.bot.fetch_streams(user_logins = [commandBot.yourChannelName]) != []:
                 if not live:
                     for element in chatters:
                         element[1] = time.time()

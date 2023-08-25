@@ -2,10 +2,14 @@
 # the arrow keys didn't seem to work on my pc so use LEFT, RIGHT, UP, and DOWN at your own risk ig
 
 # imports
+import asyncio
+import configparser
 import ctypes
-import pynput
+import os
 import aiofile
-from bots.commandBot import *
+import pynput
+from bots import commandBot
+import controllers.gbaController
 
 # setting up variables
 chatPlaying = False
@@ -54,7 +58,7 @@ async def autoSave():
 async def startAutoSave():
 	global autoSaving
 	autoSaving = True
-	asyncio.create_task(autoSave())
+	asyncio.create_task(controllers.gbaController.autoSave())
 
 # stops autosaving
 async def stopAutoSave():
@@ -65,7 +69,7 @@ async def stopAutoSave():
 async def startInputBot():
 	global inputBotPlaying
 	inputBotPlaying = True
-	asyncio.create_task(inputBot())
+	asyncio.create_task(controllers.gbaController.inputBot())
 
 # stops the input bot
 async def stopInputBot():
@@ -76,7 +80,7 @@ async def stopInputBot():
 async def startIdleBot():
 	global idleBotPlaying
 	idleBotPlaying = True
-	asyncio.create_task(idleBot())
+	asyncio.create_task(controllers.gbaController.idleBot())
 
 # stops the idle bot
 async def stopIdleBot():
@@ -94,17 +98,16 @@ async def stopChatPlays():
 	chatPlaying = False
 
 # updates snack status text in obs
-#async def updateSnatus():
+async def updateSnatus():
 
-	pass
-#	config = configparser.ConfigParser()
-#	config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
-#	snackDirectory = config.get("directories", "snack status")
+	config = configparser.ConfigParser()
+	config.read(os.path.abspath((os.path.join(commandBot.directory, "config.ini"))))
+	snackDirectory = config.get("directories", "snack status")
 
-#	async with aiofile.async_open(os.path.abspath(snackDirectory), "w") as file:
-#		if idleBotStatus:
-#			await file.write("idle bot is active")
-#		elif snackShot and not snackHealed:
-#			await file.write(currentSnack + " snack is dead")
-#		else:
-#			await file.write(currentSnack + " snack is alive")
+	async with aiofile.async_open(os.path.abspath(snackDirectory), "w") as file:
+		if idleBotStatus:
+			await file.write("idle bot is active")
+		elif snackShot and not snackHealed:
+			await file.write(currentSnack + " snack is dead")
+		else:
+			await file.write(currentSnack + " snack is alive")

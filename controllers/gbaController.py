@@ -1,10 +1,10 @@
 # imports
 import time
-from libraries import chatPlays
 from bots.commandBot import *
 import random
 import asyncio
 timeSinceLastMessage = time.time()
+from libraries import chatPlays
 
 # makes inputs when no one has typed in chat for a while
 async def idleBot():
