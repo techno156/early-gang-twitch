@@ -46,7 +46,7 @@ async def main():
 
 
         # if streamer goes offline
-        elif await bot.fetch_streams(user_logins = [yourChannelName]) == [] and not await bot.fetch_streams(user_logins = [streamerChannelName]) == []:
+        elif await bot.fetch_streams(user_logins = [yourChannelName]) == [] and await bot.fetch_streams(user_logins = [streamerChannelName]) == []:
 
             # start stream
             if await bot.fetch_streams(user_logins = [yourChannelName]) == []:
