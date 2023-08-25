@@ -40,6 +40,8 @@ class Bot(commands.Bot):
     # whenever a user joins write their id and entry time into an array and add their id to the database if not there
     async def event_join(self, channel, user):
         global chatters
+        user = await commandBot.bot.fetch_users([user.name])
+        user = user[0]
 
         # adds chatter id, watch time start, and uptime start
         if user.id is not None:
@@ -51,6 +53,7 @@ class Bot(commands.Bot):
                 async with aiosqlite.connect(os.path.abspath(os.path.join(commandBot.directory, "chatData.db"))) as db:
                     async with db.execute("SELECT id FROM economy WHERE id=?", (user.id,)) as cursor:
                         result = await cursor.fetchone()
+                        print(result)
 
                         # adding id if not in database
                         if not result:
@@ -77,7 +80,7 @@ class Bot(commands.Bot):
                 async with db.execute("SELECT * FROM economy WHERE id=?", (user.id,)) as cursor:
                     result = await cursor.fetchone()
                     if result:
-                        await cursor.execute("UPDATE economy SET watchtime=? WHERE id=?", ((float(result[1]) + (time.time() - chatter[1])),  user.id))
+                        await cursor.execute("UPDATE economy SET watchtime=? WHERE id=?", ((float(result[1]) + (time.time() - chatter[1])),  user.id,))
                         await db.commit()
 
             # removing chatter from active chatter list
@@ -150,7 +153,7 @@ class Bot(commands.Bot):
         if ctx.message.content == "!bp" or ctx.message.content == "!bp ":
 
             async with aiosqlite.connect(os.path.abspath(os.path.join(commandBot.directory, "chatData.db"))) as db:
-                async with db.execute("SELECT * FROM economy WHERE id=?", (ctx.author.id),) as cursor:
+                async with db.execute("SELECT * FROM economy WHERE id=?", (ctx.author.id,),) as cursor:
                     result = await cursor.fetchone()
 
             # sending result if id exists
@@ -192,7 +195,7 @@ class Bot(commands.Bot):
                     async with aiosqlite.connect(os.path.abspath((os.path.join(commandBot.directory, "chatData.db")))) as db:
                         async with db.execute("SELECT * FROM economy WHERE id=?", (users[0].id,)) as cursor:
                             result = await cursor.fetchone()
-                            await cursor.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] + int(ctx.message.content[1])), users[0].id))
+                            await cursor.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] + int(ctx.message.content[1])), users[0].id, ))
                             await db.commit()
 
                     await ctx.send("[bot] gave " + ctx.message.content[0] + " " + ctx.message.content[1] + " basement pesos")

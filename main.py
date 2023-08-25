@@ -13,7 +13,7 @@ async def main():
     await updateSnatus()
 
     # so you don't have to restart stream
-    if await bot.fetch_streams(user_logins=[streamerChannelName]) != []:
+    if await bot.fetch_streams(user_logins = [yourChannelName]) != []:
         await startTTS()
         await startChatPlays()
         await startAutoSave()
