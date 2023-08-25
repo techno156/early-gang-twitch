@@ -94,7 +94,7 @@ class Bot(commands.Bot):
         super().__init__(token = accessToken, prefix="!", initial_channels = [yourChannelName])
 
     # makes the bot shut the hell up about commands not existing
-    async def event_command_error(self, error):
+    async def event_command_error(self, cxt, error):
         if isinstance(error, commands.CommandNotFound):
             pass
         else:
