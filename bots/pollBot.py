@@ -64,12 +64,12 @@ class Bot(commands.Bot):
             if not runningPoll:
 
                 # error handling
-                if ctx.message.content == "!startPoll" or ctx.message.content == "!startPoll ":
+                if ctx.message.content == "!startpoll" or ctx.message.content == "!startpoll ":
                     await ctx.send("please include your title and poll options in your command messages formatted like !startPoll title, option 1, option 2, option 3, ...")
 
                 # creating poll with given names and options
                 else:
-                    ctx.message.content = ctx.message.content.replace("!startPoll ", "")
+                    ctx.message.content = ctx.message.content.replace("!startpoll ", "")
                     ctx.message.content = ctx.message.content.split(", ")
                     pollName = ctx.message.content[0]
                     pollOptions = []
