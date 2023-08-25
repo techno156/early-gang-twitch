@@ -53,7 +53,6 @@ class Bot(commands.Bot):
                 async with aiosqlite.connect(os.path.abspath(os.path.join(commandBot.directory, "chatData.db"))) as db:
                     async with db.execute("SELECT id FROM economy WHERE id=?", (user.id,)) as cursor:
                         result = await cursor.fetchone()
-                        print(result)
 
                         # adding id if not in database
                         if not result:
@@ -298,6 +297,7 @@ class Bot(commands.Bot):
         # thread to wait to remod a mod after timing them out
         async def remod(id, duration):
             await asyncio.sleep(duration)
+            user = await commandBot.bot.fetch_users([commandBot.yourChannelName])
 
             modIds = []
             while str(id) not in modIds:
@@ -309,8 +309,8 @@ class Bot(commands.Bot):
                             async with session.get("https://api.twitch.tv/helix/users") as response:
                                 rateLimit = response.headers.get("Ratelimit-Remaining")
                                 if rateLimit != "0":
-                                    await session.post("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + await user.id + "&user_id=" + id)
-                                    async with session.get("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + await user.id) as response:
+                                    await session.post("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + str(user[0].id )+ "&user_id=" + id)
+                                    async with session.get("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + str(user[0].id)) as response:
                                         modIds = []
                                         for mod in (await response.json()).get("data"):
                                             modIds.append(str(mod.get("user_id")))
@@ -328,7 +328,7 @@ class Bot(commands.Bot):
                     async with session.get("https://api.twitch.tv/helix/users", headers={"Client-ID": commandBot.clientID, "Authorization": "Bearer " + commandBot.accessToken}) as response:
                         rateLimit = response.headers.get("Ratelimit-Remaining")
                         if rateLimit != "0":
-                            async with session.get("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + user.id, headers={"Authorization": "Bearer " + commandBot.accessToken, "Client-Id": commandBot.clientID}) as response:
+                            async with session.get("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + str(user[0].id), headers={"Authorization": "Bearer " + commandBot.accessToken, "Client-Id": commandBot.clientID}) as response:
                                 mod_data = await response.json()
                                 connected = True
                         else:
@@ -352,7 +352,6 @@ class Bot(commands.Bot):
                     if ctx.author.name not in commandBot.whiteListers:
                         await db.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] - 1000), ctx.author.id))
                         await db.commit()
-
                     connected = False
                     while not connected:
                         try:
@@ -360,7 +359,7 @@ class Bot(commands.Bot):
                                 async with session.get("https://api.twitch.tv/helix/users", headers={"Client-ID": commandBot.clientID, "Authorization": "Bearer " + commandBot.accessToken}) as response:
                                     rateLimit = response.headers.get("Ratelimit-Remaining")
                                     if rateLimit != "0":
-                                        async with session.get("https://api.twitch.tv/helix/chat/chatters?broadcaster_id=" + user[0].id + "&moderator_id=" + user[0].id, headers={"Authorization": "Bearer " + commandBot.accessToken, "Client-Id": commandBot.clientID}) as response:
+                                        async with session.get("https://api.twitch.tv/helix/chat/chatters?broadcaster_id=" + str(user[0].id) + "&moderator_id=" + str(user[0].id), headers = {"Authorization": "Bearer " + commandBot.accessToken, "Client-Id": commandBot.clientID}) as response:
                                             chatters_data = await response.json()
                                             connected = True
                         except:
@@ -385,13 +384,16 @@ class Bot(commands.Bot):
                             else:
                                 pastTenseAction = pastTenseAction.replace("\"", "")
 
-                        user = await commandBot.bot.fetch_users([ctx.author.name, commandBot.yourChannelName])
+                    user = await commandBot.bot.fetch_users([user[1], commandBot.yourChannelName])
+                    try:
                         await user[1].timeout_user(commandBot.accessToken, user[1].id, user[0].id, duration, "you got shot")
-                        await ctx.send("[bot] " + ctx.author.name + " " + pastTenseAction + " " + user[1] + " with " + item)
+                    except:
+                        pass
+                    await ctx.send("[bot] " + ctx.author.name + " " + pastTenseAction + " " + user[0].name + " with " + item)
 
-                        # setting up remod thread if needed
-                        if user[0] in modIds:
-                            asyncio.create_task(remod(user[0], duration))
+                    # setting up remod thread if needed
+                    if str(user[0].id) in modIds:
+                        asyncio.create_task(remod(str(user[0].id), duration))
 
         # try to shoot the listed person
         else:
@@ -456,27 +458,29 @@ class Bot(commands.Bot):
                                         async with session.get("https://api.twitch.tv/helix/users", headers={"Client-ID": commandBot.clientID, "Authorization": "Bearer " + commandBot.accessToken}) as response:
                                             rateLimit = response.headers.get("Ratelimit-Remaining")
                                             if rateLimit != "0":
-                                                async with session.get("https://api.twitch.tv/helix/chat/chatters?broadcaster_id=" + user.id + "&moderator_id=" + user.id, headers={"Authorization": "Bearer " + commandBot.accessToken, "Client-Id": commandBot.clientID}) as response:
+                                                async with session.get("https://api.twitch.tv/helix/chat/chatters?broadcaster_id=" + str(user[0].id) + "&moderator_id=" + str(user[0].id), headers= {"Authorization": "Bearer " + commandBot.accessToken, "Client-Id": commandBot.clientID}) as response:
                                                     response = await response.json()
                                                     connected = True
                                 except:
                                     await asyncio.sleep(5)
 
                             names = [[element.get("user_id"), element.get("user_name")] for element in response.get("data")]
-                            user = names[random.randint(0, len(names) - 1)]
-                            
-                            finalId = user[0]
-                            await ctx.send("[bot] " + ctx.author.name + " tried to " + presentTenseAction + " " + ctx.message.content + " with " + item + " but they used " + user[1] + " as a shield")
+                            chat = names[random.randint(0, len(names) - 1)]
+                            finalId = chat[0]
+                            await ctx.send("[bot] " + ctx.author.name + " tried to " + presentTenseAction + " " + ctx.message.content + " with " + item + " but they used " + chat[1] + " as a shield")
 
                         # 25% chance to shoot target
                         else:
                             finalId = id
                             await ctx.send("[bot] " + ctx.author.name + " " + pastTenseAction + " " + ctx.message.content + " with " + item)
 
-                        await user.timeout_user(commandBot.accessToken, user.id, finalId, duration, "you got shot")
-
-                        if finalId in modIds:
-                            asyncio.create_task(remod(finalId, duration))
+                        try:
+                            await user[0].timeout_user(commandBot.accessToken, user[0].id, finalId, duration, "you got shot")
+                        except:
+                            pass
+                        
+                        if str(finalId) in modIds:
+                            asyncio.create_task(remod(str(finalId), duration))
 
     # disables input bot for 35 to 95 minutes
     @commands.command()

@@ -103,7 +103,6 @@ class Bot(commands.Bot):
     # when someone sends a message in chat
     async def event_message(self, message):
         global chatters
-        print("NEW MESSAGE")
 
         # don't take bot messages as real messages
         if message.echo:
