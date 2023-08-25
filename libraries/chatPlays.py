@@ -5,12 +5,12 @@
 import ctypes
 import pynput
 import aiofile
+from bots.commandBot import *
 
 # change controller here
 from controllers.gbaController import *
 
 # setting up variables
-connection = None
 chatPlaying = False
 inputBotPlaying = False
 idleBotPlaying = False

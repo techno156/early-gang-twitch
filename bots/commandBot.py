@@ -6,16 +6,58 @@
 from urllib.parse import urlencode
 from twitchio.ext import commands
 import base64
-from libraries.chatPlays import *
 import requests
+import configparser
+import os
+import time
 
 # setting up variables
+whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle"]
 chatters = []
 timeSinceLastWelcome = time.time()
+
+# setting directory if file is ran correctly
+directory = ""
+if os.path.exists(os.path.abspath(os.path.join("files"))):
+    directory = os.path.abspath(os.path.join("files"))
+
+# finding the file because im too fucking lazy to teach people how to use the terminal plus BLOCK OF TEXT SCARY AAAAAAAAAAAH
+else:
+
+    # setting up loading message
+    dotCount = 0
+    lastUpdate = time.time()
+    print("\033[1K\rloading", end = "", flush = True)
+
+    # checking file by file
+    for root, dirs, files in os.walk("\\"):
+
+        # creating loading message
+        if time.time() - lastUpdate > .5:
+            if dotCount != 0:
+                print(".", end="", flush=True)
+            else:
+                print("\033[1K\rloading", end = "", flush = True)
+            dotCount = 0 if dotCount == 3 else dotCount + 1
+            lastUpdate = time.time()
+
+        # checking if file matches
+        if "early-gang-twitch-main\\files\\config.ini" in os.path.abspath(os.path.join(root, "config.ini")):
+            directory = os.path.abspath(os.path.join(root))
+
+# printing on ready statement
+if directory == "":
+    print("\033[1K:\033[31m\rAAAA FUCK THERE'S NO FILES FOLDER AAAAAAAAAAAAAAAAA\033[0m")
+else:
+    print("\033[1K:\033[36m\rfuck it we ball\033[0m")
 
 # reading config
 config = configparser.ConfigParser()
 config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
+clientID = config.get("twitch", "client id")
+accessToken = config.get("twitch", "access token")
+streamerChannelName = config.get("twitch", "streamer channel name")
+yourChannelName = config.get("twitch", "your channel name")
 spotifyClientID = config.get("spotify", "client id")
 spotifyClientSecret = config.get("spotify", "client secret")
 spotifyRefreshToken = config.get("spotify", "spotify refresh token")
@@ -85,7 +127,6 @@ class Bot(commands.Bot):
     async def dougdoug(self, ctx: commands.Context):
         await ctx.send("[bot] https://www.twitch.tv/dougdoug")
 
-
     # sends a list of all the bots
     @commands.command()
     async def bots(self, ctx: commands.Context):
@@ -141,3 +182,5 @@ class Bot(commands.Bot):
                             await ctx.send("[bot] no song playing")
                     else:
                         await ctx.send("[bot] can't get song")
+
+bot = Bot()

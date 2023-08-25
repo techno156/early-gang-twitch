@@ -3,7 +3,6 @@ import asyncio
 import traceback
 from libraries.charityDonoTTS import *
 from libraries.chatPlays import *
-from libraries.autoStream import *
 from bots import commandBot, econBot, pollBot
 
 # main code loop
@@ -14,7 +13,7 @@ async def main():
     await chatPlays.updateSnatus()
 
     # so you don't have to restart stream
-    if await isLive(yourChannelName):
+    if await bot.fetch_streams(user_logins=[streamerChannelName]) != []:
         await startTTS()
         await startChatPlays()
         await startAutoSave()
@@ -25,7 +24,7 @@ async def main():
     while True:
 
         # if streamer goes live
-        if await isLive(yourChannelName) and await isLive(streamerChannelName):
+        if await bot.fetch_streams(user_logins = [streamerChannelName]) != [] and await bot.fetch_streams(user_logins = [yourChannelName]) != []:
 
             # shut down everything
             if ttsOn:
@@ -40,16 +39,17 @@ async def main():
                 await stopIdleBot()
 
             # end stream
-            if await isLive(yourChannelName):
-                await raid(yourChannelName, streamerChannelName)
+            if await bot.fetch_streams(user_logins = [yourChannelName]) != []:
+                users = await commandBot.bot.fetch_users([yourChannelName, streamerChannelName])
+                await users[0].start_raid(accessToken, users[1].id)
                 ws.call(obwsrequests.StopStreaming())
 
 
         # if streamer goes offline
-        elif not await isLive(yourChannelName) and not await isLive(streamerChannelName):
+        elif await bot.fetch_streams(user_logins = [yourChannelName]) == [] and not await bot.fetch_streams(user_logins = [streamerChannelName]) == []:
 
             # start stream
-            if not await isLive(yourChannelName):
+            if await bot.fetch_streams(user_logins = [yourChannelName]) == []:
                 ws.call(obwsrequests.StartStreaming())
             if not ttsOn:
                 await startTTS()

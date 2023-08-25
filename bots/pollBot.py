@@ -4,7 +4,7 @@
 
 # imports
 from twitchio.ext import commands
-from libraries.autoStream import *
+from bots.commandBot import *
 
 # setting up variables
 runningPoll = False
@@ -16,7 +16,7 @@ class Bot(commands.Bot):
 
     # sets up bot and connects to twitch
     def __init__(self):
-        super().__init__(token=accessToken, prefix="!", initial_channels=[yourChannelName])
+        super().__init__(token = accessToken, prefix = "!", initial_channels = [yourChannelName])
 
     # makes the bot shut the hell up about commands not existing
     async def event_command_error(self, ctx, error):

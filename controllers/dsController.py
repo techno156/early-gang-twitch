@@ -1,13 +1,9 @@
 # imports
 import random
 import time
+import asyncio
 from controllers import gbaController
 from libraries import chatPlays
-from libraries.autoStream import *
-
-# reading config
-config = configparser.ConfigParser()
-config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
 
 # makes inputs when no one has typed in chat for a while
 async def idleBot():

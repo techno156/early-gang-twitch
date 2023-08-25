@@ -1,12 +1,9 @@
 # imports
 import time
 from libraries import chatPlays
-from libraries.autoStream import *
+from bots.commandBot import *
 import random
-
-# reading config
-config = configparser.ConfigParser()
-config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
+import asyncio
 
 # makes inputs when no one has typed in chat for a while
 async def idleBot():
