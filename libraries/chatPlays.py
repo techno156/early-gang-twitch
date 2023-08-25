@@ -15,7 +15,6 @@ autoSaving = False
 snackShot = False
 snackHealed = False
 idleBotStatus = False
-timeSinceLastMessage = time.time()
 snacks = ["sleepy", "chris", "burst", "silly", "cautious", "sonic"]
 currentSnack = "chris"
 sendInput = ctypes.windll.user32.SendInput
