@@ -25,15 +25,15 @@ async def idleBot():
             # 25% chance of non directionals
             dice = random.randint(1, 4)
             if dice == 1:
-                dice = random.randint(1, 6)
+                dice = random.randint(1, 4)
                 match dice:
                     case 1:
                         await a(botPressTime)
                     case 2:
                         await b(botPressTime)
-                    case 5:
+                    case 3:
                         await select(botPressTime)
-                    case 6:
+                    case 4:
                         await start(botPressTime)
 
             # 75% chance of directionals
@@ -119,6 +119,7 @@ async def inputBot():
                 # 33% chance of no action
                 dice = random.randint(1, 3)
                 if dice != 1:
+                    dice = random.randint(1, 17)
                     match dice:
                         case 1:
                             await up(botPressTime)
@@ -257,7 +258,7 @@ async def inputBot():
                 # 10% chance of no action
                 dice = random.randint(1, 10)
                 if dice != 1:
-                    dice = random.randint(1, 6)
+                    dice = random.randint(1, 11)
                     match dice:
                         case 1:
                             await slightUp(lightPressTime)
