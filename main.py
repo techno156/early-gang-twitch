@@ -1,7 +1,8 @@
 # imports
 import asyncio
 import traceback
-from libraries.charityDonoTTS import *
+from obswebsocket import obsws
+from obswebsocket import requests as obwsrequests
 from libraries.chatPlays import *
 from bots import commandBot, econBot, pollBot
 
@@ -9,12 +10,11 @@ from bots import commandBot, econBot, pollBot
 async def main():
 
     # setting up
-    ws.connect()
+    commandBot.ws.connect()
     await updateSnatus()
 
     # so you don't have to restart stream
-    if await bot.fetch_streams(user_logins = [yourChannelName]) != []:
-        await startTTS()
+    if await commandBot.bot.fetch_streams(user_logins = [commandBot.yourChannelName]) != []:
         await startChatPlays()
         await startAutoSave()
         await startInputBot()
@@ -24,11 +24,9 @@ async def main():
     while True:
 
         # if streamer goes live
-        if await bot.fetch_streams(user_logins = [streamerChannelName]) != [] and await bot.fetch_streams(user_logins = [yourChannelName]) != []:
+        if await commandBot.bot.fetch_streams(user_logins = [commandBot.streamerChannelName]) != [] and await commandBot.bot.fetch_streams(user_logins = [commandBot.yourChannelName]) != []:
 
             # shut down everything
-            if ttsOn:
-                await stopTTS()
             if chatPlaying:
                 await stopChatPlays()
             if autoSaving:
@@ -39,20 +37,18 @@ async def main():
                 await stopIdleBot()
 
             # end stream
-            if await bot.fetch_streams(user_logins = [yourChannelName]) != []:
-                users = await commandBot.bot.fetch_users([yourChannelName, streamerChannelName])
-                await users[0].start_raid(accessToken, users[1].id)
-                ws.call(obwsrequests.StopStreaming())
+            if await commandBot.bot.fetch_streams(user_logins = [commandBot.yourChannelName]) != []:
+                users = await commandBot.bot.fetch_users([commandBot.yourChannelName, commandBot.streamerChannelName])
+                await users[0].start_raid(commandBot.accessToken, users[1].id)
+                commandBot.ws.call(obwsrequests.StopStreaming())
 
 
         # if streamer goes offline
-        elif await bot.fetch_streams(user_logins = [yourChannelName]) == [] and await bot.fetch_streams(user_logins = [streamerChannelName]) == []:
+        elif await commandBot.bot.fetch_streams(user_logins = [commandBot.yourChannelName]) == [] and await commandBot.bot.fetch_streams(user_logins = [commandBot.streamerChannelName]) == []:
 
             # start stream
-            if await bot.fetch_streams(user_logins = [yourChannelName]) == []:
-                ws.call(obwsrequests.StartStreaming())
-            if not ttsOn:
-                await startTTS()
+            if await commandBot.bot.fetch_streams(user_logins = [commandBot.yourChannelName]) == []:
+                commandBot.ws.call(obwsrequests.StartStreaming())
             if not chatPlaying:
                 await startChatPlays()
             if not autoSaving:

@@ -8,9 +8,10 @@ import aiohttp
 from twitchio.ext import commands
 import base64
 import requests
+import asyncio
+from obswebsocket import obsws
 from obswebsocket import requests as obwsrequests
 from libraries.chatPlays import *
-from libraries import charityDonoTTS
 
 # setting up variables
 whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle"]
@@ -61,6 +62,10 @@ yourChannelName = config.get("twitch", "your channel name")
 spotifyClientID = config.get("spotify", "client id")
 spotifyClientSecret = config.get("spotify", "client secret")
 spotifyRefreshToken = config.get("spotify", "spotify refresh token")
+websocketPassword = config.get("obs", "websocket server password")
+
+
+ws = obsws("localhost", 4444, websocketPassword)
 
 # if you don't have a refresh token
 if spotifyRefreshToken == "":
@@ -159,13 +164,13 @@ class Bot(commands.Bot):
     @commands.command()
     async def startstream(self, ctx: commands.Context):
         if ctx.author.name in whiteListers:
-             charityDonoTTS.ws.call(obwsrequests.StartStreaming())
+             ws.call(obwsrequests.StartStreaming())
     
     # allows mods to stop stream
     @commands.command()
     async def stopstream(self, ctx: commands.Context):
         if ctx.author.name in whiteListers:
-            charityDonoTTS.ws.call(obwsrequests.StopStreaming())
+            ws.call(obwsrequests.StopStreaming())
     
     # allows mods to raid
     @commands.command()

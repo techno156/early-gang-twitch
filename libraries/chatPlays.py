@@ -7,8 +7,8 @@ import ctypes
 import os
 import aiofile
 import pynput
-from bots import commandBot
 from controllers.pokemonRubyController import *
+from bots import commandBot
 
 # setting up variables
 chatPlaying = False
