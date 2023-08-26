@@ -1,10 +1,9 @@
 # imports
 import time
-from bots.commandBot import *
 import random
 import asyncio
-timeSinceLastMessage = time.time()
 from libraries import chatPlays
+timeSinceLastMessage = time.time()
 
 # makes inputs when no one has typed in chat for a while
 async def idleBot():
@@ -298,177 +297,60 @@ async def controller(message):
         lightPressTime = (random.randint(1, 3) / 400)
         holdTime = random.randint(5, 10)
         message = message.lower()
-        dice = random.randint(1, 40)
 
-        # 2.5% chance of random input
-        if dice == 1 and (message == "a" or "hold a" in message or "mash a" in message or message == "b" or "hold b" in message or "mash b" in message or message == "x" or message == "y" or "select" in message or "start" in message or "up wander" in message or "down wander" in message or "left wander" in message or "right wander" in message or "wander" in message or "hold up" in message or "hold down" in message or "hold left" in message or "hold right" in message or "slup" in message or "slown" in message or "sleft" in message or "slight" in message or "up" in message or "down" in message or "left" in message or "right" in message or "stop" in message):
-            dice = random.randint(1, 28)
-            match dice:
-                case 1:
-                    await up(pressTime)
-                case 2:
-                    await down(pressTime)
-                case 3:
-                    await left(pressTime)
-                case 4:
-                    await right(pressTime)
-                case 5:
-                    await holdUp(holdTime)
-                case 6:
-                    await holdDown(holdTime)
-                case 7:
-                    await holdLeft(holdTime)
-                case 8:
-                    await holdRight(holdTime)
-                case 9:
-                    await a(pressTime)
-                case 10:
-                    await holdA(holdTime)
-                case 11:
-                    await mashA(pressTime)
-                case 12:
-                    await b(pressTime)
-                case 13:
-                    await holdB()
-                case 14:
-                    await mashB(pressTime)
-                case 17:
-                    await select(pressTime)
-                case 18:
-                    await start(pressTime)
-                case 19:
-                    await stop()
-                case 20:
-                    await wander(4, holdTime)
-                case 21:
-                    await slightUp(lightPressTime)
-                case 22:
-                    await slightDown(lightPressTime)
-                case 23:
-                    await slightLeft(lightPressTime)
-                case 24:
-                    await slightRight(lightPressTime)
-                case 25:
-                    await upWander(holdTime)
-                case 26:
-                    await downWander(holdTime)
-                case 27:
-                    await leftWander(holdTime)
-                case 28:
-                    await rightWander(holdTime)
-
-        # 2.5% chance of opposite input
-        elif dice == 2:
-            if message == "a":
-                await b(pressTime)
-            elif "hold a" in message:
-                await holdB()
-            elif "mash a" in message:
-                await mashB(pressTime)
-            elif message == "b":
-                await a(pressTime)
-            elif "hold b" in message:
-                await holdA(holdTime)
-            elif "mash b" in message:
-                await mashA(pressTime)
-            elif "select" in message:
-                await start(pressTime)
-            elif "start" in message:
-                await select(pressTime)
-            elif "up wander" in message:
-                await downWander(holdTime)
-            elif "down wander" in message:
-                await upWander(holdTime)
-            elif "left wander" in message:
-                await rightWander(holdTime)
-            elif "right wander" in message:
-                await leftWander(holdTime)
-            elif "wander" in message:
-                await stop()
-            elif "hold up" in message:
-                await holdDown(holdTime)
-            elif "hold down" in message:
-                await holdUp(holdTime)
-            elif "hold left" in message:
-                await holdRight(holdTime)
-            elif "hold right" in message:
-                await holdLeft(holdTime)
-            elif "slup" in message:
-                await slightDown(lightPressTime)
-            elif "slown" in message:
-                await slightUp(lightPressTime)
-            elif "sleft" in message:
-                await slightRight(lightPressTime)
-            elif "slight" in message:
-                await slightLeft(lightPressTime)
-            elif "up" in message:
-                await down(pressTime)
-            elif "down" in message:
-                await up(pressTime)
-            elif "left" in message:
-                await right(pressTime)
-            elif "right" in message:
-                await left(pressTime)
-            elif "stop" in message:
-                await upWander(holdTime)
-                await downWander(holdTime)
-                await leftWander(holdTime)
-                await rightWander(holdTime)
-
-        # 95% chance of correct inputs
-        else:
-            if message == "a":
-                await a(pressTime)
-            elif "hold a" in message:
-                await holdA(holdTime)
-            elif "mash a" in message:
-                await mashA(pressTime)
-            elif message == "b":
-                await b(pressTime)
-            elif "hold b" in message:
-                await holdB()
-            elif "mash b" in message:
-                await mashB(pressTime)
-            elif "select" in message:
-                await select(pressTime)
-            elif "start" in message:
-                await start(pressTime)
-            elif "up wander" in message:
-                await upWander(holdTime)
-            elif "down wander" in message:
-                await downWander(holdTime)
-            elif "left wander" in message:
-                await leftWander(holdTime)
-            elif "right wander" in message:
-                await rightWander(holdTime)
-            elif "wander" in message:
-                await wander(4, holdTime)
-            elif "hold up" in message:
-                await holdUp(holdTime)
-            elif "hold down" in message:
-                await holdDown(holdTime)
-            elif "hold left" in message:
-                await holdLeft(holdTime)
-            elif "hold right" in message:
-                await holdRight(holdTime)
-            elif "slup" in message:
-                await slightUp(lightPressTime)
-            elif "slown" in message:
-                await slightDown(lightPressTime)
-            elif "sleft" in message:
-                await slightLeft(lightPressTime)
-            elif "slight" in message:
-                await slightRight(lightPressTime)
-            elif "up" in message:
-                await up(pressTime)
-            elif "down" in message:
-                await down(pressTime)
-            elif "left" in message:
-                await left(pressTime)
-            elif "right" in message:
-                await right(pressTime)
-            elif "stop" in message:
-                await stop()
+        # making inputs
+        if message == "a":
+            await a(pressTime)
+        elif "hold a" in message:
+            await holdA(holdTime)
+        elif "mash a" in message:
+            await mashA(pressTime)
+        elif message == "b":
+            await b(pressTime)
+        elif "hold b" in message:
+            await holdB()
+        elif "mash b" in message:
+            await mashB(pressTime)
+        elif "select" in message:
+            await select(pressTime)
+        elif "start" in message:
+            await start(pressTime)
+        elif "up wander" in message:
+            await upWander(holdTime)
+        elif "down wander" in message:
+            await downWander(holdTime)
+        elif "left wander" in message:
+            await leftWander(holdTime)
+        elif "right wander" in message:
+            await rightWander(holdTime)
+        elif "wander" in message:
+            await wander(4, holdTime)
+        elif "hold up" in message:
+            await holdUp(holdTime)
+        elif "hold down" in message:
+            await holdDown(holdTime)
+        elif "hold left" in message:
+            await holdLeft(holdTime)
+        elif "hold right" in message:
+            await holdRight(holdTime)
+        elif "slup" in message:
+            await slightUp(lightPressTime)
+        elif "slown" in message:
+            await slightDown(lightPressTime)
+        elif "sleft" in message:
+            await slightLeft(lightPressTime)
+        elif "slight" in message:
+            await slightRight(lightPressTime)
+        elif "up" in message:
+            await up(pressTime)
+        elif "down" in message:
+            await down(pressTime)
+        elif "left" in message:
+            await left(pressTime)
+        elif "right" in message:
+            await right(pressTime)
+        elif "stop" in message:
+            await stop()
 
 # define controls down here
 async def a(pressTime):

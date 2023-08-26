@@ -2,14 +2,13 @@
 # the arrow keys didn't seem to work on my pc so use LEFT, RIGHT, UP, and DOWN at your own risk ig
 
 # imports
-import asyncio
 import configparser
 import ctypes
 import os
 import aiofile
 import pynput
 from bots import commandBot
-import controllers.gbaController
+from controllers.pokemonRubyController import *
 
 # setting up variables
 chatPlaying = False
@@ -69,7 +68,7 @@ async def stopAutoSave():
 async def startInputBot():
 	global inputBotPlaying
 	inputBotPlaying = True
-	asyncio.create_task(controllers.gbaController.inputBot())
+	asyncio.create_task(inputBot())
 
 # stops the input bot
 async def stopInputBot():
@@ -80,7 +79,7 @@ async def stopInputBot():
 async def startIdleBot():
 	global idleBotPlaying
 	idleBotPlaying = True
-	asyncio.create_task(controllers.gbaController.idleBot())
+	asyncio.create_task(idleBot())
 
 # stops the idle bot
 async def stopIdleBot():
@@ -100,10 +99,12 @@ async def stopChatPlays():
 # updates snack status text in obs
 async def updateSnatus():
 
+	# reading the config
 	config = configparser.ConfigParser()
 	config.read(os.path.abspath((os.path.join(commandBot.directory, "config.ini"))))
 	snackDirectory = config.get("directories", "snack status")
 
+	# updating text
 	async with aiofile.async_open(os.path.abspath(snackDirectory), "w") as file:
 		if idleBotStatus:
 			await file.write("idle bot is active")

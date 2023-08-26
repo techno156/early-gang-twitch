@@ -8,12 +8,8 @@ import aiohttp
 from twitchio.ext import commands
 import base64
 import requests
-import configparser
-import os
-import time
-import asyncio
-from controllers.gbaController import *
 from obswebsocket import requests as obwsrequests
+from libraries.chatPlays import *
 from libraries import charityDonoTTS
 
 # setting up variables

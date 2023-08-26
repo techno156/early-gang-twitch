@@ -4,14 +4,11 @@
 # not much documentation here because even i don't know what the fuck this object oriented programming shit is doing in python
 
 # imports
-from datetime import datetime, timezone
-import random
 import aiohttp
 import aiosqlite
 from twitchio.ext import commands
 from libraries.chatPlays import *
 from bots import commandBot
-import time
 from libraries import chatPlays
 
 # setting up variables
