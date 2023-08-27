@@ -183,9 +183,10 @@ class Bot(commands.Bot):
 
             # finding and updating the appropriate points
             else:
-                ctx.message.content = ctx.message.content.replace("!giveBp ", "")
-                ctx.message.content = ctx.message.content.split(", ")
-                users = await commandBot.bot.fetch_users(ctx.message.content)
+                ctx.message.content = ctx.message.content.replace("!givebp ", "")
+                ctx.message.content = ctx.message.content.split()
+                users = await commandBot.bot.fetch_users([ctx.message.content[0]])
+                print(ctx.message.content)
 
                 if users[0].id and ctx.message.content[0] not in commandBot.whiteListers or ctx.author.name == ctx.message.content[0]:
                     async with aiosqlite.connect(os.path.abspath((os.path.join(commandBot.directory, "chatData.db")))) as db:
@@ -259,9 +260,9 @@ class Bot(commands.Bot):
 
             # finding and updating the appropriate points
             else:
-                ctx.message.content = ctx.message.content.replace("!bpTax ", "")
-                ctx.message.content = ctx.message.content.split(", ")
-                users = await commandBot.bot.fetch_users(ctx.message.content)
+                ctx.message.content = ctx.message.content.replace("!bptax ", "")
+                ctx.message.content = ctx.message.content.split()
+                users = await commandBot.bot.fetch_users([ctx.message.content[0]])
 
                 # no negative numbers
                 if int(ctx.message.content[1]) < 0:
