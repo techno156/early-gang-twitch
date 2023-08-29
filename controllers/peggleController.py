@@ -204,6 +204,8 @@ async def controller(message):
             await left()
         elif "right" in message:
             await right()
+        elif "cheat" in message:
+            await cheat()
 
 async def up():
      pyautogui.moveTo(pyautogui.position().x, pyautogui.position().y - 50, duration = .5)
@@ -221,3 +223,6 @@ async def shoot():
     pyautogui.mouseDown()
     await asyncio.sleep(.5)
     pyautogui.mouseUp()
+
+async def cheat():
+    chatPlays.holdAndReleaseKey("P", .2)
