@@ -14,7 +14,7 @@ from obswebsocket import requests as obwsrequests
 from libraries.chatPlays import *
 
 # setting up variables
-whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle"]
+whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle", "fratriarch"]
 chatters = []
 
 # setting directory if file is ran correctly
@@ -22,7 +22,7 @@ directory = ""
 if os.path.exists(os.path.abspath(os.path.join("files"))):
     directory = os.path.abspath(os.path.join("files"))
 
-# finding the file because im too fucking lazy to teach people how to use the terminal plus BLOCK OF TEXT SCARY AAAAAAAAAAAH
+# finding the file because i'm too fucking lazy to teach people how to use the terminal plus BLOCK OF TEXT SCARY AAAAAAAAAAAH
 else:
 
     # setting up loading message
@@ -63,7 +63,6 @@ spotifyClientID = config.get("spotify", "client id")
 spotifyClientSecret = config.get("spotify", "client secret")
 spotifyRefreshToken = config.get("spotify", "spotify refresh token")
 websocketPassword = config.get("obs", "websocket server password")
-
 
 ws = obsws("localhost", 4444, websocketPassword)
 
@@ -110,6 +109,62 @@ class Bot(commands.Bot):
         # don't take bot messages as real messages
         if message.echo:
             return
+        
+        if "deez nuts" in message.content.lower() or "D:\\ eez nuts" in message.content.lower():
+            duration = random.choice([420, 69])
+            user = await bot.fetch_users([yourChannelName])
+            
+            # thread to wait to remod a mod after timing them out
+            async def remod(id, duration):
+                await asyncio.sleep(duration)
+                user = await bot.fetch_users([yourChannelName])
+
+                modIds = []
+                while str(id) not in modIds:
+                    connected = False
+                    while not connected:
+                        try:
+                            async with aiohttp.ClientSession(headers = {"Client-ID": clientID, "Authorization": "Bearer " + accessToken}) as session:
+                                async with session.get("https://api.twitch.tv/helix/users") as response:
+                                    rateLimit = response.headers.get("Ratelimit-Remaining")
+                                    if rateLimit != "0":
+                                        await session.post("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + str(user[0].id) + "&user_id=" + id)
+                                        async with session.get("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + str(user[0].id)) as response:
+                                            modIds = []
+                                            for mod in (await response.json()).get("data"):
+                                                modIds.append(str(mod.get("user_id")))
+                                            connected = True
+                                    else:
+                                        await asyncio.sleep(5)
+                        except:
+                            await asyncio.sleep(5)
+
+            # getting mod ids
+            connected = False
+            while not connected:
+                try:
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get("https://api.twitch.tv/helix/users", headers = {"Client-ID": clientID, "Authorization": "Bearer " + accessToken}) as response:
+                            rateLimit = response.headers.get("Ratelimit-Remaining")
+                            if rateLimit != "0":
+                                async with session.get("https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=" + str(user[0].id), headers={"Authorization": "Bearer " + accessToken, "Client-Id": clientID}) as response:
+                                    mod_data = await response.json()
+                                    connected = True
+                            else:
+                                await asyncio.sleep(5)
+                except:
+                    await asyncio.sleep(5)
+            modIds = [mod.get("user_id") for mod in mod_data.get("data")]
+
+            # timing out
+            try:
+                await user[0].timeout_user(accessToken, user[0].id, message.author.id, duration, "GOTTEM")
+            except:
+                pass
+
+            # setting up remod thread
+            if str(message.author.id) in modIds:
+                asyncio.create_task(remod(str(message.author.id), duration))
 
         # making controller input
         await asyncio.create_task(controller(message.content))

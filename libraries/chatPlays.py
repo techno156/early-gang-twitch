@@ -98,14 +98,7 @@ async def stopChatPlays():
 
 # updates snack status text in obs
 async def updateSnatus():
-
-	# reading the config
-	config = configparser.ConfigParser()
-	config.read(os.path.abspath((os.path.join(commandBot.directory, "config.ini"))))
-	snackDirectory = config.get("directories", "snack status")
-
-	# updating text
-	async with aiofile.async_open(os.path.abspath(snackDirectory), "w") as file:
+	async with aiofile.async_open(os.path.join(commandBot.directory, "snackStatus.txt"), "w") as file:
 		if idleBotStatus:
 			await file.write("idle bot is active")
 		elif snackShot and not snackHealed:
