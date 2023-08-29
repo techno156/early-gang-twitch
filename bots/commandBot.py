@@ -178,7 +178,7 @@ class Bot(commands.Bot):
     # sends what's going on
     @commands.command()
     async def what(self, ctx: commands.Context):
-        await ctx.send("[bot] chat tries to beat pokemon ruby before dougdoug streams again")
+        await ctx.send("[bot] chat tries to beat douggle before dougdoug streams again")
 
     # sends dougdoug channel link
     @commands.command()

@@ -7,7 +7,7 @@ import ctypes
 import os
 import aiofile
 import pynput
-from controllers.pokemonRubyController import *
+from controllers.peggleController import *
 from bots import commandBot
 
 # setting up variables
