@@ -5,6 +5,7 @@
 import configparser
 import ctypes
 import os
+import asyncio
 import aiofile
 import pynput
 import configparser
@@ -20,6 +21,8 @@ elif controller == "stanley parable":
 	from controllers.stanleyParableController import *
 elif controller == "ruby" or controller == "pokemon ruby":
 	from controllers.pokemonRubyController import *
+elif controller == "none":
+	from controllers.noController import *
 else:
 	print("\033[1K:\033[31m\rFUCK THAT'S NOT A CONTROLLER AAAAAAAAAAAAAAAAAAAAAAA\033[0m")
 
