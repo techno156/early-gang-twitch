@@ -60,7 +60,7 @@ class Bot(commands.Bot):
         global runningPoll
 
         # check if user can start poll and if no other polls running
-        if ctx.author.name in whiteListers:
+        if ctx.author.name in tokens:
             if not runningPoll:
 
                 # error handling
@@ -154,7 +154,7 @@ class Bot(commands.Bot):
         global pollName
 
         # checks if the user is allowed to do this and if there is even a poll running
-        if ctx.author.name in whiteListers:
+        if ctx.author.name in tokens:
             if not runningPoll:
                 await ctx.send("[bot] no ongoing polls")
             elif runningPoll:

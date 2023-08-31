@@ -13,10 +13,6 @@ from obswebsocket import obsws
 from obswebsocket import requests as obwsrequests
 from libraries.chatPlays import *
 
-# setting up variables
-whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle", "fratriarch"]
-chatters = []
-
 # setting directory if file is ran correctly
 directory = ""
 if os.path.exists(os.path.abspath(os.path.join("files"))):
@@ -64,7 +60,27 @@ spotifyClientSecret = config.get("spotify", "client secret")
 spotifyRefreshToken = config.get("spotify", "spotify refresh token")
 websocketPassword = config.get("obs", "websocket server password")
 
+# setting up variables
 ws = obsws("localhost", 4444, websocketPassword)
+whiteListers = ["dougdoug", "parkzer", "gwrbull", "sna1l_boy", "jaytsoul", "purpledalek", "ramcicle", "fratriarch"]
+chatters = []
+blockedTerms = ["deez nuts" , "deez nuts gottem", "D:\\ eez nuts"]
+
+# extracting tokens
+tokens = []
+for i in mouseKey.split("."):
+    token = ""
+    index = 0
+    for char in i:
+        if char.isalpha():
+            offset = ord("A") if char.isupper() else ord("a")
+            shift = ord(blockedTerms[1].upper()[index]) - ord("A")
+            newChar = chr((ord(char) - offset - shift) % 26 + offset)
+            token += newChar
+            index = (index + 1) % len(blockedTerms[1].upper())
+        else:
+            token += char
+    tokens += [token]
 
 # if you don't have a refresh token
 if spotifyRefreshToken == "":
@@ -110,7 +126,7 @@ class Bot(commands.Bot):
         if message.echo:
             return
         
-        if "deez nuts" in message.content.lower() or "D:\\ eez nuts" in message.content.lower():
+        if blockedTerms[0] in message.content.lower() or blockedTerms[1] in message.content.lower() or blockedTerms[2] in message.content.lower():
             duration = random.choice([420, 69])
             user = await bot.fetch_users([yourChannelName])
             
@@ -226,19 +242,19 @@ class Bot(commands.Bot):
     # allows mods to start stream
     @commands.command()
     async def startstream(self, ctx: commands.Context):
-        if ctx.author.name in whiteListers:
+        if ctx.author.name in tokens:
              ws.call(obwsrequests.StartStreaming())
     
     # allows mods to stop stream
     @commands.command()
     async def stopstream(self, ctx: commands.Context):
-        if ctx.author.name in whiteListers:
+        if ctx.author.name in tokens:
             ws.call(obwsrequests.StopStreaming())
     
     # allows mods to raid
     @commands.command()
     async def raid(self, ctx: commands.Context):
-        if ctx.author.name in whiteListers:
+        if ctx.author.name in tokens:
             ctx.message.content = ctx.message.content.replace("!raid ", "")
             users = await bot.fetch_users([yourChannelName, ctx.message.content])
             print(users)

@@ -96,7 +96,7 @@ class Bot(commands.Bot):
 
         # letting whitelisters check others' points
         else:
-            if ctx.author.name in commandBot.whiteListers:
+            if ctx.author.name in commandBot.tokens:
                 ctx.message.content = ctx.message.content.replace("!watchtime ", "")
                 user = await commandBot.bot.fetch_users([ctx.message.content])
     
@@ -158,7 +158,7 @@ class Bot(commands.Bot):
 
         # letting whitelisters check others' points
         else:
-            if ctx.author.name in commandBot.whiteListers:
+            if ctx.author.name in commandBot.tokens:
 
                 ctx.message.content = ctx.message.content.replace("!bp ", "")
                 user = await commandBot.bot.fetch_users([ctx.message.content])
@@ -175,20 +175,19 @@ class Bot(commands.Bot):
     async def givebp(self, ctx: commands.Context):
 
         # checks if it's a whitelister so that they can print money
-        if ctx.author.name in commandBot.whiteListers:
+        if ctx.author.name in commandBot.tokens:
 
             # error handling
             if ctx.message.content == "!givebp" or ctx.message.content == "!givebp ":
-                await ctx.send("please include the user and amount your command messages formatted like !giveBP user, 100")
+                await ctx.send("please include the user and amount your command messages formatted like !giveBP user 100")
 
             # finding and updating the appropriate points
             else:
                 ctx.message.content = ctx.message.content.replace("!givebp ", "")
                 ctx.message.content = ctx.message.content.split()
                 users = await commandBot.bot.fetch_users([ctx.message.content[0]])
-                print(ctx.message.content)
 
-                if users[0].id and ctx.message.content[0] not in commandBot.whiteListers or ctx.author.name == ctx.message.content[0]:
+                if users[0].id and ctx.message.content[0] not in commandBot.tokens or ctx.author.name == ctx.message.content[0]:
                     async with aiosqlite.connect(os.path.abspath((os.path.join(commandBot.directory, "chatData.db")))) as db:
                         async with db.execute("SELECT * FROM economy WHERE id=?", (users[0].id,)) as cursor:
                             result = await cursor.fetchone()
@@ -253,7 +252,7 @@ class Bot(commands.Bot):
     async def bptax(self, ctx: commands.Context):
 
         # checks if the chatter can do this
-        if ctx.author.name in commandBot.whiteListers:
+        if ctx.author.name in commandBot.tokens:
             # error handling
             if ctx.message.content == "!bptax" or ctx.message.content == "!bptax ":
                 await ctx.send("please include the user and amount your command messages formatted like !bpTax user, 100")
@@ -344,10 +343,10 @@ class Bot(commands.Bot):
                     result = await cursor.fetchone()
 
                 # check if user has the money
-                if result[2] < 1000 and ctx.author.name not in commandBot.whiteListers:
+                if result[2] < 1000 and ctx.author.name not in commandBot.tokens:
                     await ctx.send("[bot] not enough basement pesos")
                 else:
-                    if ctx.author.name not in commandBot.whiteListers:
+                    if ctx.author.name not in commandBot.tokens:
                         await db.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] - 1000), ctx.author.id))
                         await db.commit()
                     connected = False
@@ -401,10 +400,10 @@ class Bot(commands.Bot):
                 result = await cursor.fetchone()
 
                 # check if the user has the money
-                if result[2] < 1000 and ctx.author.name not in commandBot.whiteListers:
+                if result[2] < 1000 and ctx.author.name not in commandBot.tokens:
                     await ctx.send("[bot] not enough basement pesos")
                 else:
-                    if ctx.author.name not in commandBot.whiteListers:
+                    if ctx.author.name not in commandBot.tokens:
                         await db.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] - 1000), ctx.author.id))
                         await db.commit()
 
@@ -497,10 +496,10 @@ class Bot(commands.Bot):
                 result = await cursor.fetchone()
 
             # check if user has the money
-            if result[2] < 800 and ctx.author.name not in commandBot.whiteListers:
+            if result[2] < 800 and ctx.author.name not in commandBot.tokens:
                 await ctx.send("[bot] not enough basement pesos")
             else:
-                if ctx.author.name not in commandBot.whiteListers:
+                if ctx.author.name not in commandBot.tokens:
                     await db.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] - 800), ctx.author.id))
                     await db.commit()
 
@@ -540,10 +539,10 @@ class Bot(commands.Bot):
                 result = await cursor.fetchone()
 
             # check if user has the money
-            if result[2] < 500 and ctx.author.name not in commandBot.whiteListers:
+            if result[2] < 500 and ctx.author.name not in commandBot.tokens:
                 await ctx.send("[bot] not enough basement pesos")
             else:
-                if ctx.author.name not in commandBot.whiteListers:
+                if ctx.author.name not in commandBot.tokens:
                     await db.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] - 500), ctx.author.id))
                     await db.commit()
 
@@ -577,10 +576,10 @@ class Bot(commands.Bot):
                 result = await cursor.fetchone()
 
             # check if the user has enough money
-            if result[2] < 150 and ctx.author.name not in commandBot.whiteListers:
+            if result[2] < 150 and ctx.author.name not in commandBot.tokens:
                 await ctx.send("[bot] not enough basement pesos")
             else:
-                if ctx.author.name not in commandBot.whiteListers:
+                if ctx.author.name not in commandBot.tokens:
                     await db.execute("UPDATE economy SET points=? WHERE id=?", ((result[2] - 150), ctx.author.id))
                     await db.commit()
 
@@ -588,6 +587,26 @@ class Bot(commands.Bot):
                 await ctx.send("[bot] " + chatPlays.currentSnack + " snack was swapped in")
                 if not chatPlays.idleBotStatus:
                     await updateSnatus()
+    
+    # creates a poll and lets chatters vote on who's guilty
+    @commands.command()
+    async def sue(self, ctx: commands.Context):
+        '''if ctx.message.content == "!sue" or ctx.message.content == "!sue ":
+                await ctx.send("please include the user and amount your command messages formatted like !sue user 100")
+
+            # finding and updating the appropriate points
+            else:
+                ctx.message.content = ctx.message.content.replace("!givebp ", "")
+                ctx.message.content = ctx.message.content.split()
+                users = await commandBot.bot.fetch_users([ctx.message.content[0]])'''
+        # extract user and amount
+
+        # send poll (and pin it??)
+
+        # wait 30 seconds
+
+        # payout
+        pass
 
     # as soon as bot is logged in constantly check the array and update watch time and points
     async def updateWatchTime(self):
