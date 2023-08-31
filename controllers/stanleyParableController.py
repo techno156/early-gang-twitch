@@ -1,9 +1,9 @@
 # imports
 import time
 import random
-import pyautogui
 import asyncio
 from libraries import chatPlays
+import pydirectinput
 timeSinceLastMessage = time.time()
 
 # makes inputs when no one has typed in chat for a while
@@ -69,9 +69,6 @@ async def inputBot():
     # checks if conditions are right
     while chatPlays.inputBotPlaying:
         if not chatPlays.snackShot or chatPlays.snackHealed:
-            botPressTime = (random.randint(1, 12) / 10)
-            botHoldTime = (random.randint(1, 100) / 10)
-            lightPressTime = (random.randint(1, 3) / 400)
 
             # sleepy snack controls
             if chatPlays.currentSnack == "sleepy":
@@ -264,21 +261,20 @@ async def controller(message):
             await stop()
 
 async def lookUp():
-     pyautogui.moveTo(pyautogui.position().x, pyautogui.position().y - 50, duration = .5)
+    pydirectinput.move(xOffset = 0, yOffset = -50, duration = .5, relative = True)
 
 async def lookDown():
-    pyautogui.moveTo(pyautogui.position().x, (pyautogui.position().y + 50), duration = .5)
+    pydirectinput.move(xOffset = 0, yOffset = 50, duration = .5, relative = True)
 
 async def lookLeft():
-    pyautogui.moveTo((pyautogui.position().x - 50), pyautogui.position().y, duration = .5)
+    pydirectinput.move(xOffset = -50, yOffset = 0, duration = .5, relative = True)
 
 async def lookRight():
-    pyautogui.moveTo((pyautogui.position().x + 50), pyautogui.position().y, duration = .5)
+   pydirectinput.move(xOffset = 50, yOffset = 0, duration = .5, relative = True)
+   pydirectinput.click()
 
 async def interact():
-    pyautogui.mouseDown()
-    await asyncio.sleep(.5)
-    pyautogui.mouseUp()
+    pydirectinput.click()
 
 async def forwards():
     await chatPlays.holdAndReleaseKey(chatPlays.keyCodes.get("W"), .2)
@@ -293,7 +289,7 @@ async def uncrouch():
     await chatPlays.releaseKey(chatPlays.keyCodes.get("CONTROL"))
 
 async def walk():
-    pyautogui.mouseDown(button = "right")
+    pydirectinput.mouseDown(button = "right")
 
 async def stop():
-    pyautogui.mouseUp(button = "right")
+    pydirectinput.mouseUp(button = "right")
