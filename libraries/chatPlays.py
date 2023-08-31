@@ -4,11 +4,11 @@
 # imports
 import configparser
 import ctypes
-import os
 import asyncio
-import aiofile
 import pynput
 import configparser
+from obswebsocket import obsws
+from obswebsocket import requests as obwsrequests
 
 # getting controller
 config = configparser.ConfigParser()
@@ -25,6 +25,11 @@ elif controller == "none":
 	from controllers.noController import *
 else:
 	print("\033[1K:\033[31m\rFUCK THAT'S NOT A CONTROLLER AAAAAAAAAAAAAAAAAAAAAAA\033[0m")
+
+# connecting to obs
+websocketPassword = config.get("obs", "websocket server password")
+ws = obsws("localhost", 4444, websocketPassword)
+ws.connect()
 
 # setting up variables
 chatPlaying = False
@@ -115,10 +120,9 @@ async def stopChatPlays():
 
 # updates snack status text in obs
 async def updateSnatus():
-	async with aiofile.async_open("files\\snackStatus.txt", "w") as file:
-		if idleBotStatus:
-			await file.write("idle bot is active")
-		elif snackShot and not snackHealed:
-			await file.write(currentSnack + " snack is dead")
-		else:
-			await file.write(currentSnack + " snack is alive")
+	if idleBotStatus:
+		ws.call(obwsrequests.SetTextGDIPlusProperties(source = "snack status", text = "idle bot is active"))
+	elif snackShot and not snackHealed:
+		ws.call(obwsrequests.SetTextGDIPlusProperties(source = "snack status", text = (currentSnack + " snack is dead")))
+	else:
+		ws.call(obwsrequests.SetTextGDIPlusProperties(source = "snack status", text = (currentSnack + " snack is alive")))

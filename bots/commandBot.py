@@ -9,6 +9,7 @@ from twitchio.ext import commands
 import base64
 import requests
 import asyncio
+import os
 from obswebsocket import obsws
 from obswebsocket import requests as obwsrequests
 from libraries.chatPlays import *

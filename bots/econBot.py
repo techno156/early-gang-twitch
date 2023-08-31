@@ -12,6 +12,7 @@ from twitchio.ext import commands
 from libraries.chatPlays import *
 from bots import commandBot
 from libraries import chatPlays
+import os
 
 # setting up variables
 chatters = []
