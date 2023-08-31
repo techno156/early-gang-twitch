@@ -7,8 +7,21 @@ import ctypes
 import os
 import aiofile
 import pynput
-from controllers.peggleController import *
-from bots import commandBot
+import configparser
+
+# getting controller
+config = configparser.ConfigParser()
+config.read("files\\config.ini")
+controller = config.get("command bot", "controller")
+
+if controller == "peggle":
+	from controllers.peggleController import *
+elif controller == "stanley parable":
+	from controllers.stanleyParableController import *
+elif controller == "ruby" or controller == "pokemon ruby":
+	from controllers.pokemonRubyController import *
+else:
+	print("\033[1K:\033[31m\rFUCK THAT'S NOT A CONTROLLER AAAAAAAAAAAAAAAAAAAAAAA\033[0m")
 
 # setting up variables
 chatPlaying = False
@@ -98,7 +111,7 @@ async def stopChatPlays():
 
 # updates snack status text in obs
 async def updateSnatus():
-	async with aiofile.async_open(os.path.join(commandBot.directory, "snackStatus.txt"), "w") as file:
+	async with aiofile.async_open("files\\snackStatus.txt", "w") as file:
 		if idleBotStatus:
 			await file.write("idle bot is active")
 		elif snackShot and not snackHealed:

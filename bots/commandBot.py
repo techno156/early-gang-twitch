@@ -173,12 +173,16 @@ class Bot(commands.Bot):
     # sends list of chat plays controls
     @commands.command()
     async def controls(self, ctx: commands.Context):
-        await ctx.send("[bot] (capitalization doesnt matter) up, down, left, right, shoot, cheat")
+        global config
+        config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
+        await ctx.send("[bot] " + config.get("command bot", "!controls"))
 
     # sends what's going on
     @commands.command()
     async def what(self, ctx: commands.Context):
-        await ctx.send("[bot] chat tries to beat douggle before dougdoug streams again")
+        global config
+        config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
+        await ctx.send("[bot] " + config.get("command bot", "!what"))
 
     # sends dougdoug channel link
     @commands.command()
@@ -188,12 +192,16 @@ class Bot(commands.Bot):
     # sends a list of all the bots
     @commands.command()
     async def bots(self, ctx: commands.Context):
-        await ctx.send("[bot] input bot, aka chris snack, presses a random button every minute or so, idle bot steals your controller if you leave it alone for five minutes, and theres a 5% chance of your own input being completely random or the opposite")
+        global config
+        config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
+        await ctx.send("[bot] " + config.get("command bot", "!bots"))
 
     # sends a list of commands
     @commands.command()
     async def menu(self, ctx: commands.Context):
-        await ctx.send("[bot] !what, !bots, !song, !controls, !vote, !poll, !discord, !watchtime, !bp, !donate, !playlist, !bpshop, !snackfamily")
+        global config
+        config.read(os.path.abspath((os.path.join(directory, "config.ini"))))
+        await ctx.send("[bot] " + config.get("command bot", "!menu"))
 
     # sends a list of sll the different input bots
     @commands.command()
