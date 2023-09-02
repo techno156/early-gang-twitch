@@ -95,5 +95,4 @@ try:
     loop.run_until_complete(setup())
     loop.run_forever()
 except Exception as e:
-    print(e)
-    traceback.print_exc()
+    print(traceback.format_exc())

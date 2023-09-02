@@ -4,6 +4,8 @@
 # not much documentation here because even i don't know what the fuck this object oriented programming shit is doing in python
 
 # imports
+import sys
+import traceback
 import aiohttp
 import aiosqlite
 import time
@@ -31,7 +33,7 @@ class Bot(commands.Bot):
         if isinstance(error, commands.CommandNotFound):
             pass
         else:
-            print(error)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     # starts updating database
     async def event_ready(self):
@@ -205,24 +207,25 @@ class Bot(commands.Bot):
         else:
 
             # error handling
-            if ctx.message.content == "!giveBp" or ctx.message.content == "!giveBp ":
-                await ctx.send("please include the user and amount your command messages formatted like !giveBP user, 100")
+            if ctx.message.content == "!givebp" or ctx.message.content == "!givebp ":
+                await ctx.send("please include the user and amount your command messages formatted like !giveBP user 100")
 
             # finding and updating the appropriate points
             else:
-                ctx.message.content = ctx.message.content.replace("!giveBp ", "")
-                ctx.message.content = ctx.message.content.split(", ")
+                ctx.message.content = ctx.message.content.replace("!givebp ", "")
+                ctx.message.content = ctx.message.content.split()
+                users = await commandBot.bot.fetch_users([ctx.message.content[0]])
 
                 # no stealing >:)
                 if int(ctx.message.content[1]) < 0:
                     await ctx.send("[bot] nice try")
 
                 # if both users exist
-                elif await ctx.author.id and  users[0].id:
+                elif ctx.author.id and users[0].id:
 
                     # finding giver and taker
                     async with aiosqlite.connect(os.path.abspath((os.path.join(commandBot.directory, "chatData.db")))) as db:
-                        async with db.execute("SELECT * FROM economy WHERE id=?", (await ctx.author.id,)) as cursor:
+                        async with db.execute("SELECT * FROM economy WHERE id=?", (ctx.author.id,)) as cursor:
                             giver = await cursor.fetchone()
 
                         async with db.execute("SELECT * FROM economy WHERE id=?", (users[0].id,)) as cursor:
@@ -237,9 +240,8 @@ class Bot(commands.Bot):
 
                         # transfer money
                         elif giver and taker:
-
-                            await cursor.execute("UPDATE economy SET points=? WHERE id=?", ((giver[2] - int(ctx.message.content[1])), ctx.author.id))
-                            await cursor.execute("UPDATE economy SET points=? WHERE id=?", ((taker[2] + int(ctx.message.content[1])), users[0].id))
+                            await db.execute("UPDATE economy SET points=? WHERE id=?", ((giver[2] - int(ctx.message.content[1])), ctx.author.id))
+                            await db.execute("UPDATE economy SET points=? WHERE id=?", ((taker[2] + int(ctx.message.content[1])), users[0].id))
                             await db.commit()
 
                             await ctx.send("[bot] " + ctx.author.name + " gave " + ctx.message.content[0] + " " + ctx.message.content[1] + " basement pesos")

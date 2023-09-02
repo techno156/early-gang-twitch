@@ -3,8 +3,10 @@
 # not much documentation here because even i don't know what the fuck this object oriented programming is doing in python
 
 # imports
+import sys
 from urllib.parse import urlencode
 import aiohttp
+import traceback
 from twitchio.ext import commands
 import base64
 import requests
@@ -113,11 +115,11 @@ class Bot(commands.Bot):
         super().__init__(token = accessToken, prefix="!", initial_channels = [yourChannelName])
 
     # makes the bot shut the hell up about commands not existing
-    async def event_command_error(self, cxt, error):
+    async def event_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             pass
         else:
-            print(error)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     # when someone sends a message in chat
     async def event_message(self, message):

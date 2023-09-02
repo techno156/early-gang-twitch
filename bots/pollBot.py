@@ -23,7 +23,7 @@ class Bot(commands.Bot):
         if isinstance(error, commands.CommandNotFound):
             pass
         else:
-            print(error)
+            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     # does whenever a message is sent
     async def event_message(self, message):
