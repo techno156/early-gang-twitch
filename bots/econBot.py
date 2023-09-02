@@ -8,6 +8,7 @@ import sys
 import traceback
 import aiohttp
 import aiosqlite
+import random
 import time
 import asyncio
 from twitchio.ext import commands
@@ -21,6 +22,9 @@ chatters = []
 live = False
 firstRedeemed = True
 activeCodes = []
+trialOngoing = False
+voters = []
+verdict = []
 
 class Bot(commands.Bot):
 
@@ -34,6 +38,33 @@ class Bot(commands.Bot):
             pass
         else:
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
+    # does whenever a message is sent
+    async def event_message(self, message):
+        global trialOngoing
+        global verdict
+        global voters
+
+        # don't take bot responses as real messages
+        if message.echo:
+            return
+
+        # if pole is active
+        elif trialOngoing:
+
+            # checks if chatter already votes
+            if message.author.name not in voters:
+
+                if message.content == "guilty":
+                    verdict[0] += 1
+                    voters += [message.author.name]
+                
+                elif message.content == "not guilty":
+                    verdict[1] += 1
+                    voters += [message.author.name]
+
+        # telling bot to do command
+        await self.handle_commands(message)
 
     # starts updating database
     async def event_ready(self):
@@ -596,22 +627,68 @@ class Bot(commands.Bot):
     # creates a poll and lets chatters vote on who's guilty
     @commands.command()
     async def sue(self, ctx: commands.Context):
-        '''if ctx.message.content == "!sue" or ctx.message.content == "!sue ":
-                await ctx.send("please include the user and amount your command messages formatted like !sue user 100")
+        global trialOngoing
+        global voters
+        global verdict
 
-            # finding and updating the appropriate points
+        if ctx.message.content == "!sue" or ctx.message.content == "!sue ":
+            await ctx.send("please include the user and amount your command messages formatted like !sue user amount")
+        else:
+
+            # extracting info
+            ctx.message.content = ctx.message.content.replace("!sue ", "")
+            ctx.message.content = ctx.message.content.split()
+            users = await commandBot.bot.fetch_users([ctx.message.content[0]])
+
+            # setting up trial
+            trialOngoing = True
+            voters = [ctx.author.name, ctx.message.content[0]]
+            verdict = [0, 0]
+            await ctx.send("the trial of " + ctx.author.name + " v. " + ctx.message.content[0] + " has commenced. type \"guilty\" or \"not guilty\" to vote")
+            await asyncio.sleep(10)
+
+            # delivering the verdict
+            if verdict[0] > verdict [1]:
+                await ctx.send("the verdict is... GUILTY")
+
+                async with aiosqlite.connect(os.path.abspath(os.path.join(commandBot.directory, "chatData.db"))) as db:
+                        
+                        # take the amount from listed person and give it to the user
+                        async with aiosqlite.connect(os.path.abspath((os.path.join(commandBot.directory, "chatData.db")))) as db:
+                            async with db.execute("SELECT * FROM economy WHERE id=?", (ctx.author.id,)) as cursor:
+                                suer = await cursor.fetchone()
+
+                            async with db.execute("SELECT * FROM economy WHERE id=?", (users[0].id,)) as cursor:
+                                suee = await cursor.fetchone()
+                                if suee[2] < int(ctx.message.content[1]):
+                                    ctx.message.content[1] = suee[2]
+
+                            if str((ctx.author.name).lower()) != str((ctx.message.content[0]).lower()) and suee and suer:
+                                await db.execute("UPDATE economy SET points=? WHERE id=?", ((suee[2] - int(ctx.message.content[1])), users[0].id))
+                                await db.execute("UPDATE economy SET points=? WHERE id=?", ((suer[2] + int(ctx.message.content[1])), ctx.author.id))
+                                await db.commit()                                    
+
+            elif verdict[0] < verdict [1]:
+                await ctx.send("the verdict is... NOT GUILTY")
+                async with aiosqlite.connect(os.path.abspath(os.path.join(commandBot.directory, "chatData.db"))) as db:
+                        
+                        # take the amount from the user and give it to the listed person
+                        async with aiosqlite.connect(os.path.abspath((os.path.join(commandBot.directory, "chatData.db")))) as db:
+                            async with db.execute("SELECT * FROM economy WHERE id=?", (ctx.author.id,)) as cursor:
+                                suer = await cursor.fetchone()
+                                if suee[2] < ctx.message.content[1]:
+                                    ctx.message.content[1] == suee[2]
+
+                            async with db.execute("SELECT * FROM economy WHERE id=?", (users[0].id,)) as cursor:
+                                suee = await cursor.fetchone()
+
+                            if str((ctx.author.name).lower()) != str((ctx.message.content[0]).lower()) and suee and suer:
+                                await db.execute("UPDATE economy SET points=? WHERE id=?", ((suee[2] + int(ctx.message.content[1])), users[0].id))
+                                await db.execute("UPDATE economy SET points=? WHERE id=?", ((suer[2] - int(ctx.message.content[1])), ctx.author.id))
+                                await db.commit()             
+
             else:
-                ctx.message.content = ctx.message.content.replace("!givebp ", "")
-                ctx.message.content = ctx.message.content.split()
-                users = await commandBot.bot.fetch_users([ctx.message.content[0]])'''
-        # extract user and amount
-
-        # send poll (and pin it??)
-
-        # wait 30 seconds
-
-        # payout
-        pass
+                await ctx.send("the verdict is... MISTRIAL")
 
     # as soon as bot is logged in constantly check the array and update watch time and points
     async def updateWatchTime(self):
