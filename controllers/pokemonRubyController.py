@@ -318,31 +318,15 @@ async def idleBot():
             # 25% chance of non directionals
             dice = random.randint(1, 4)
             if dice == 1:
-                dice = random.randint(1, 4)
-                match dice:
-                    case 1:
-                        await a(botPressTime)
-                    case 2:
-                        await b(botPressTime)
-                    case 3:
-                        await select(botPressTime)
-                    case 4:
-                        await start(botPressTime)
-
+                allowedKeys = ("a", "b", "select", "start") # Create a tuple of non-directional keys to press
+                await press(botPressTime, random.choice(allowedKeys)) #Randomly choose one and press it
             # 75% chance of directionals
             else:
                 dice = random.randint(1, 5)
-                match dice:
-                    case 1:
-                        await up(botPressTime)
-                    case 2:
-                        await down(botPressTime)
-                    case 3:
-                        await left(botPressTime)
-                    case 4:
-                        await right(botPressTime)
-                    case 5:
-                        await wander(4, botHoldTime)
+                if (dice == 5): #20% chance of hold-wandering, otherwise, go for a normal wander
+                    await wander(botHoldTime)
+                else:
+                    await wander(botPressTime, moveCount=1) #choose one random directional move, and go that way for a little bit
 
         # tell obs idle bot is inactive
         else:
