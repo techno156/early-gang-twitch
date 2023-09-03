@@ -55,9 +55,29 @@ async def mash(pressTime, key): #Command to mash the given keys for the amount o
     maxMashTime = 2 #Set up the maximum amount of time that Twitch chat can have a control be mashed for
     pressInterval = 0.3 #how long between presses
     for i in range(0, maxMashTime, pressTime + pressInterval): #Mash timer loop
-        await press(controlKeyCodes[key], pressTime)
+        await press(pressTime, controlKeyCodes[key])
         await asyncio.sleep(pressInterval) #Take a break and release the key
 
+# Wander commands
+## Set up the commands for wandering about
+async def wander(holdTime, direction=None, moveCount=4): #Default of 4 random moves per wander, as set in old code
+    for i in range(moveCount): #Repeat for the number of given moves
+        if not direction: #No direction defined, so we're wandering in random directions
+            allowedMovements = ("up", "down", "left", "right") #Set what directions we're allowed to move ahead of time
+            #dice = random.randint(0, len(allowedMovements)) #Pick a direction. Python indexing starts at 0. Set random to the number of movements we're allowed
+            #await press(allowedMovements[dice], holdTime) 
+            await press(holdTime, random.choice(allowedMovements)) #Turns out that we can just use python's random to pick the move for us
+        else: #We're wandering in some vague direction        
+            allowedMovements = allowedUD = ("left", "right") #Default wandering directions for moving up/down. We do have to pick one or the other
+            if direction in ("left", "right"):
+                allowedMovements = ("up", "down") #If it's one of the other ones, then we switch the allowed movements up
+            dice = random.randint(1, 10)
+            if (dice <= 4): #Move in the desired direction 40% of the time
+                await press(holdTime, direction)
+            else:
+                await press(holdTime, random.choice(allowedMovements)) #Move in one of the other two directions instead
+
+# Old Move Definitions
 async def a(pressTime):
     await chatPlays.holdAndReleaseKey(chatPlays.keyCodes.get("L"), pressTime)
 
