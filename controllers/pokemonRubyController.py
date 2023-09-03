@@ -58,7 +58,7 @@ async def mash(pressTime, key): #Command to mash the given keys for the amount o
         await press(pressTime, controlKeyCodes[key])
         await asyncio.sleep(pressInterval) #Take a break and release the key
 
-# Wander commands
+# Wander command
 ## Set up the commands for wandering about
 async def wander(holdTime, direction=None, moveCount=4): #Default of 4 random moves per wander, as set in old code
     for i in range(moveCount): #Repeat for the number of given moves
@@ -76,6 +76,13 @@ async def wander(holdTime, direction=None, moveCount=4): #Default of 4 random mo
                 await press(holdTime, direction)
             else:
                 await press(holdTime, random.choice(allowedMovements)) #Move in one of the other two directions instead
+
+# Stop movements
+## Stop moving, darn you! 
+async def stop(): 
+    activeKeys = [key for key, value in pressedKeys if value is True] # Get the keys that are currently being pressed. It's easier to pressing every possible combination
+    for key in activeKeys:
+        await chatPlays.releaseKey(controlKeyCodes[key]) #Release the relevant key
 
 # Old Move Definitions
 async def a(pressTime):
