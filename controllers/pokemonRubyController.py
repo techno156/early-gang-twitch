@@ -6,6 +6,58 @@ from libraries import chatPlays
 timeSinceLastMessage = time.time()
 
 # Move definitions
+
+# Move dictionary
+#We want to centralise our controls for easy configuration later
+controls = { 
+    "up": "W",
+    "down": "S",
+    "left": "A",
+    "right": "D",
+    "a": "L", #A crew taking Ls (LUL|D:) [choose appropriate reaction as desired]
+    "b": "K",
+    "start": "U",
+    "select": "P"
+}
+
+# Get the keycodes for the corresponding controls. Set them up in a dict, because we have to use them later anyway, and they shouldn't change
+controlKeyCodes = { 
+    "up": chatPlays.keyCodes.get(controls["up"]), #Fetch the keys from the control dictionary (above)
+    "down": chatPlays.keyCodes.get(controls["down"]),
+    "left": chatPlays.keyCodes.get(controls["left"]),
+    "right": chatPlays.keyCodes.get(controls["right"]),
+    "a": chatPlays.keyCodes.get(controls["a"]), 
+    "b": chatPlays.keyCodes.get(controls["b"]),
+    "start": chatPlays.keyCodes.get(controls["start"]),
+    "select": chatPlays.keyCodes.get(controls["select"])
+}
+
+pressedKeys = { # Keep a record of what key is being pressed
+    "up": False,
+    "down": False,
+    "left": False,
+    "right": False,
+    "a": False,
+    "b": False,
+    "start": False,
+    "select": False
+}
+####
+
+# Press, Mash and Hold Master Commands
+## It's easier if we just have the few functions that handle the basic... functions
+async def press(buttonTime, key): #Command to press the given amount of time. Holding just means we press for longer
+    pressedKeys[key] = True
+    await chatPlays.holdAndReleaseKey(controlKeyCodes[key], buttonTime)
+    pressedKeys[key] = False
+
+async def mash(pressTime, key): #Command to mash the given keys for the amount of time
+    maxMashTime = 2 #Set up the maximum amount of time that Twitch chat can have a control be mashed for
+    pressInterval = 0.3 #how long between presses
+    for i in range(0, maxMashTime, pressTime + pressInterval): #Mash timer loop
+        await press(controlKeyCodes[key], pressTime)
+        await asyncio.sleep(pressInterval) #Take a break and release the key
+
 async def a(pressTime):
     await chatPlays.holdAndReleaseKey(chatPlays.keyCodes.get("L"), pressTime)
 
